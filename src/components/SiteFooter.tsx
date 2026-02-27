@@ -3,7 +3,7 @@ export function SiteFooter() {
     <footer className="footer" id="contact">
       <div className="container footer-grid">
         <div>
-          <h3>NovexTrustPay</h3>
+          <img src="/logo.svg" alt="NovexTrustPay logo" className="footer-logo" />
           <p>Secure, transparent, and innovation-led digital banking for personal and business customers.</p>
           <p>Email: support@novextrustpay.com<br />Phone: +1 (800) 448-7200</p>
         </div>

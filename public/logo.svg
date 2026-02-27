@@ -1,0 +1,7 @@
+<svg width="220" height="56" viewBox="0 0 220 56" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <rect x="1" y="1" width="54" height="54" rx="14" fill="#1A3A52"/>
+  <path d="M16 35V21h6.4l4.6 8.2 4.5-8.2H38v14h-4.8v-7.6l-3.8 6.7h-4.8l-3.9-6.8V35H16z" fill="#06B6D4"/>
+  <path d="M8 48C12.5 43.5 18.5 41 25 41s12.5 2.5 17 7" stroke="#10B981" stroke-width="2.4" stroke-linecap="round"/>
+  <text x="70" y="25" fill="#1A3A52" font-family="Inter, Arial, sans-serif" font-size="19" font-weight="800">NovexTrustPay</text>
+  <text x="70" y="42" fill="#4B5563" font-family="Inter, Arial, sans-serif" font-size="10" font-weight="600" letter-spacing="1">DIGITAL BANKING PLATFORM</text>
+</svg>

@@ -1,110 +1,243 @@
+import { useMemo, useState } from 'react'
 import { motion } from 'framer-motion'
-import { ShieldCheck, Wallet, Landmark, ChartColumn, BriefcaseBusiness, PiggyBank } from 'lucide-react'
-import { SiteHeader } from '../components/SiteHeader'
+import {
+  ChartSpline,
+  Landmark,
+  PiggyBank,
+  ShieldCheck,
+  Sparkles,
+  WalletCards,
+} from 'lucide-react'
 import { SiteFooter } from '../components/SiteFooter'
+import { SiteHeader } from '../components/SiteHeader'
 import { AnimatedCounter } from '../components/AnimatedCounter'
 
+type ServiceTab = {
+  key: string
+  name: string
+  description: string
+  bullets: string[]
+  image: string
+}
+
 const features = [
-  { icon: Wallet, title: 'Instant Account Opening', text: 'Complete your enrollment in minutes with guided digital steps.' },
-  { icon: Landmark, title: 'Flexible Loan Options', text: 'Competitive personal, business, and auto loan pathways.' },
-  { icon: ShieldCheck, title: 'Secure Online Banking', text: '24/7 access protected by modern encryption and MFA.' },
-  { icon: ChartColumn, title: 'Investment Management', text: 'Build wealth with strategy tools and expert guidance.' },
-  { icon: BriefcaseBusiness, title: 'Insurance Solutions', text: 'Coverage options tailored for personal and business needs.' },
-  { icon: PiggyBank, title: 'Savings & Rewards', text: 'High-yield savings products with attractive account benefits.' },
+  {
+    icon: WalletCards,
+    title: 'Instant Account Opening',
+    text: 'Complete your application in under 5 minutes with guided onboarding.',
+  },
+  {
+    icon: Landmark,
+    title: 'Flexible Loan Options',
+    text: 'Transparent terms for personal, business, and auto financing.',
+  },
+  {
+    icon: ShieldCheck,
+    title: 'Secure Online Banking',
+    text: 'Industry-grade encryption, MFA, and real-time fraud monitoring.',
+  },
+  {
+    icon: ChartSpline,
+    title: 'Investment Management',
+    text: 'Portfolio visibility and strategy support for long-term wealth growth.',
+  },
+  {
+    icon: Sparkles,
+    title: 'Insurance Solutions',
+    text: 'Comprehensive coverage options tailored to your risk profile.',
+  },
+  {
+    icon: PiggyBank,
+    title: 'Savings & Rewards',
+    text: 'High-yield savings products with value-added account benefits.',
+  },
 ]
 
-const serviceTabs = [
-  { name: 'Personal Banking', desc: 'Checking and savings accounts, debit/credit cards, and personal loans.' },
-  { name: 'Business Banking', desc: 'Business accounts, merchant services, and financing support.' },
-  { name: 'Investment Services', desc: 'Portfolio management, retirement planning, and risk balancing.' },
-  { name: 'Insurance Products', desc: 'Life, health, home, and auto protection options.' },
-  { name: 'Mortgage Solutions', desc: 'Home purchase and refinancing with flexible repayment plans.' },
+const services: ServiceTab[] = [
+  {
+    key: 'personal',
+    name: 'Personal Banking',
+    description: 'Checking and savings accounts, debit and credit cards, and consumer lending from one digital dashboard.',
+    bullets: ['Economy, NOW, and Special SSB account types', 'Spend controls and transaction alerts', 'Personal loan and card support'],
+    image: '/media/credit-cards-that-are-stacked-floor.jpg',
+  },
+  {
+    key: 'business',
+    name: 'Business Banking',
+    description: 'Business accounts, payment operations, and tailored financing for growing teams and entrepreneurs.',
+    bullets: ['Business checking and treasury tools', 'Merchant and payment processing options', 'Working capital and expansion loans'],
+    image: '/media/close-up-five-rows-coins.jpg',
+  },
+  {
+    key: 'investment',
+    name: 'Investment Services',
+    description: 'Planning and portfolio support designed to help clients build, preserve, and transfer wealth.',
+    bullets: ['Risk-profiled strategy assistance', 'Retirement planning support', 'Long-term portfolio oversight'],
+    image: '/media/credit-written-scrabble-letters-high-view.jpg',
+  },
+  {
+    key: 'insurance',
+    name: 'Insurance Products',
+    description: 'Home, pet, and core insurance options integrated into your financial profile.',
+    bullets: ['Coverage matching by profile and need', 'Policy management guidance', 'Premium payment convenience'],
+    image: '/media/credit-card-payment-buy-sell-products-service.jpg',
+  },
+  {
+    key: 'mortgage',
+    name: 'Mortgage Solutions',
+    description: 'Competitive mortgage pathways for purchases and refinancing with clear rate structures.',
+    bullets: ['Fixed and flexible term options', 'Home purchase and refinance support', 'Advisor-backed application process'],
+    image: '/media/african-female-happily-shopping-online-using-laptop-smartphone-while-holding-her-credit-card.jpg',
+  },
 ]
 
 const testimonials = [
-  'NovexTrustPay made managing my finances effortless. The app is intuitive and support is exceptional. - Sarah M.',
-  'I opened my account in less than 5 minutes and rates were genuinely competitive. - James T.',
-  'As a freelancer, their business tools made cash flow and payments far easier. - Maria L.',
+  {
+    quote:
+      'NovexTrustPay made managing my finances effortless. The app is intuitive, and the customer service is exceptional.',
+    author: 'Sarah M., Business Owner',
+  },
+  {
+    quote:
+      'I opened my account in less than 5 minutes. The process was seamless and I was impressed by the transparency.',
+    author: 'James T., Investor',
+  },
+  {
+    quote:
+      'As a freelancer, having a business account that is easy to manage has been a game-changer for my cash flow.',
+    author: 'Maria L., Freelancer',
+  },
 ]
 
-const fadeUp = {
+const stagger = {
   hidden: { opacity: 0, y: 24 },
-  show: { opacity: 1, y: 0, transition: { duration: 0.55 } },
+  show: {
+    opacity: 1,
+    y: 0,
+    transition: {
+      duration: 0.5,
+      staggerChildren: 0.1,
+    },
+  },
 }
 
 export function HomePage() {
+  const [activeService, setActiveService] = useState<ServiceTab>(services[0])
+
+  const year = useMemo(() => new Date().getFullYear(), [])
+
   return (
     <>
       <SiteHeader />
       <main>
-        <section className="hero-v2">
+        <section className="hero-v2" id="home">
           <div className="container hero-grid">
-            <motion.div variants={fadeUp} initial="hidden" animate="show">
-              <p className="eyebrow">Banking Reimagined For The Modern Era</p>
-              <h1>Your Financial Future Starts Here</h1>
-              <p className="lead">Secure, transparent, and designed for your success. Open your account in minutes and unlock unlimited financial possibilities.</p>
-              <div className="hero-actions">
+            <motion.div variants={stagger} initial="hidden" animate="show">
+              <motion.p className="eyebrow" variants={stagger}>Banking Reimagined For The Modern Era</motion.p>
+              <motion.h1 variants={stagger}>Empower Your Financial Future</motion.h1>
+              <motion.p className="lead" variants={stagger}>
+                Secure, transparent, and innovative financial solutions tailored for individuals and businesses. Open your account in minutes and manage everything from one trusted platform.
+              </motion.p>
+              <motion.div className="hero-actions" variants={stagger}>
                 <a href="/register" className="btn solid">Open Your Account Today</a>
-                <a href="#services" className="btn ghost">Learn More</a>
-              </div>
+                <a href="#services" className="btn ghost">Schedule a Consultation</a>
+              </motion.div>
             </motion.div>
-            <motion.div variants={fadeUp} initial="hidden" animate="show" transition={{ delay: 0.15 }} className="hero-media">
-              <img src="/media/african-female-happily-shopping-online-using-laptop-smartphone-while-holding-her-credit-card.jpg" alt="Customer managing finances online" />
+
+            <motion.div className="hero-media" variants={stagger} initial="hidden" animate="show">
+              <video autoPlay muted loop playsInline poster="/media/african-female-happily-shopping-online-using-laptop-smartphone-while-holding-her-credit-card.jpg">
+                <source src="https://player.vimeo.com/external/434045526.sd.mp4?s=cbfc53a7a5ab202f4f35f693440cf4f644a4ba31&profile_id=165&oauth2_token_id=57447761" type="video/mp4" />
+              </video>
             </motion.div>
           </div>
         </section>
 
         <section id="trust" className="section container">
-          <motion.h2 variants={fadeUp} initial="hidden" whileInView="show" viewport={{ once: true }}>Trusted by Thousands, Backed by Excellence</motion.h2>
+          <motion.h2 initial={{ opacity: 0, y: 16 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }}>
+            Trusted by Thousands, Backed by Excellence
+          </motion.h2>
+          <p className="section-note">Join a growing community of customers who choose NovexTrustPay for secure, reliable, and future-ready banking.</p>
           <div className="stats-grid">
-            <article><strong><AnimatedCounter to={500} suffix="K+" /></strong><span>Active Customers</span></article>
-            <article><strong>$<AnimatedCounter to={25} suffix="B+" /></strong><span>Assets Under Management</span></article>
-            <article><strong><AnimatedCounter to={99} suffix=".9%" /></strong><span>Platform Uptime</span></article>
-            <article><strong><AnimatedCounter to={24} suffix="/7" /></strong><span>Customer Support</span></article>
+            <article>
+              <strong><AnimatedCounter to={500} suffix="K+" /></strong>
+              <span>Active Customers</span>
+            </article>
+            <article>
+              <strong>$<AnimatedCounter to={2.5} suffix="B+" decimals={1} /></strong>
+              <span>Assets Under Management</span>
+            </article>
+            <article>
+              <strong><AnimatedCounter to={99.9} suffix="%" decimals={1} /></strong>
+              <span>Platform Uptime</span>
+            </article>
+            <article>
+              <strong>24/7</strong>
+              <span>Customer Support</span>
+            </article>
           </div>
         </section>
 
         <section id="services" className="section alt">
           <div className="container">
             <h2>Banking Solutions Designed for You</h2>
-            <div className="feature-grid">
-              {features.map((item, idx) => {
+            <p className="section-note">From personal savings to business financing, NovexTrustPay provides comprehensive financial products built around your goals.</p>
+            <motion.div className="feature-grid" variants={stagger} initial="hidden" whileInView="show" viewport={{ once: true }}>
+              {features.map((item) => {
                 const Icon = item.icon
                 return (
-                  <motion.article key={item.title} variants={fadeUp} initial="hidden" whileInView="show" viewport={{ once: true }} transition={{ delay: idx * 0.06 }} className="feature-card">
-                    <Icon size={22} />
+                  <motion.article key={item.title} className="feature-card" variants={stagger}>
+                    <div className="feature-icon-wrap">
+                      <Icon size={22} />
+                    </div>
                     <h3>{item.title}</h3>
                     <p>{item.text}</p>
                   </motion.article>
                 )
               })}
-            </div>
+            </motion.div>
           </div>
         </section>
 
         <section id="how-it-works" className="section container split">
           <div>
             <h2>Getting Started is Simple</h2>
+            <p className="section-note">Follow three clear steps to begin your journey with NovexTrustPay.</p>
             <ol>
-              <li>Sign Up: Create your account in under 2 minutes.</li>
-              <li>Verify: Complete identity and contact verification securely.</li>
-              <li>Start Banking: Access all services immediately.</li>
+              <li>Sign Up: Create your account with basic information in under 2 minutes.</li>
+              <li>Verify: Complete identity and contact verification through secure digital checks.</li>
+              <li>Start Banking: Access accounts, cards, transfers, and services immediately.</li>
             </ol>
           </div>
-          <img src="/media/credit-card-payment-buy-sell-products-service.jpg" alt="User making secure digital payment" />
+          <img src="/media/african-female-happily-shopping-online-using-laptop-smartphone-while-holding-her-credit-card.jpg" alt="Customer using modern mobile banking application" />
         </section>
 
         <section className="section alt" id="about">
           <div className="container">
             <h2>Comprehensive Financial Services</h2>
-            <div className="service-list">
-              {serviceTabs.map((service) => (
-                <article key={service.name}>
-                  <h3>{service.name}</h3>
-                  <p>{service.desc}</p>
-                </article>
+            <p className="section-note">Explore service categories without clutter using interactive tabs.</p>
+            <div className="service-tabs" role="tablist" aria-label="Service categories">
+              {services.map((service) => (
+                <button
+                  key={service.key}
+                  className={`service-tab ${activeService.key === service.key ? 'active' : ''}`}
+                  onClick={() => setActiveService(service)}
+                  role="tab"
+                  aria-selected={activeService.key === service.key}
+                >
+                  {service.name}
+                </button>
               ))}
             </div>
+            <motion.article key={activeService.key} className="service-panel" initial={{ opacity: 0, y: 14 }} animate={{ opacity: 1, y: 0 }}>
+              <div>
+                <h3>{activeService.name}</h3>
+                <p>{activeService.description}</p>
+                <ul>
+                  {activeService.bullets.map((point) => <li key={point}>{point}</li>)}
+                </ul>
+              </div>
+              <img src={activeService.image} alt={`${activeService.name} illustration`} />
+            </motion.article>
           </div>
         </section>
 
@@ -114,8 +247,8 @@ export function HomePage() {
             <li>256-bit SSL encryption for all transactions</li>
             <li>Multi-factor authentication for account access</li>
             <li>FDIC insurance on deposits up to $250,000</li>
-            <li>Regular security audits and compliance checks</li>
-            <li>24/7 fraud monitoring and alerting</li>
+            <li>ISO 27001 aligned controls and regular security audits</li>
+            <li>24/7 fraud monitoring with instant alerting</li>
           </ul>
         </section>
 
@@ -123,7 +256,12 @@ export function HomePage() {
           <div className="container">
             <h2>What Our Customers Say</h2>
             <div className="testimonial-grid">
-              {testimonials.map((quote) => <blockquote key={quote}>{quote}</blockquote>)}
+              {testimonials.map((item) => (
+                <blockquote key={item.author}>
+                  <p>{item.quote}</p>
+                  <cite>{item.author}</cite>
+                </blockquote>
+              ))}
             </div>
           </div>
         </section>
@@ -133,8 +271,9 @@ export function HomePage() {
           <p>Join thousands of satisfied customers and experience banking the way it should be.</p>
           <div className="hero-actions">
             <a href="/register" className="btn solid">Open Your Account Now</a>
-            <a href="/login" className="btn ghost">Schedule a Free Consultation</a>
+            <a href="/login" className="btn ghost">Login to Dashboard</a>
           </div>
+          <small className="section-note">{year} NovexTrustPay | Secure, compliant, customer-first banking.</small>
         </section>
       </main>
       <SiteFooter />

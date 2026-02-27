@@ -1,73 +1,57 @@
-# React + TypeScript + Vite
+# NovexTrustPay React Platform
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+Production-ready React + TypeScript banking frontend with modern UI, OTP verification flow, password recovery, and transaction PIN integration through Supabase.
 
-Currently, two official plugins are available:
+## Stack
+- React 19 + TypeScript + Vite
+- Framer Motion (scroll/entrance animations)
+- React Hook Form + Zod validation
+- Supabase (Auth + Postgres + RPC)
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Babel](https://babeljs.io/) (or [oxc](https://oxc.rs) when used in [rolldown-vite](https://vite.dev/guide/rolldown)) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
-
-## React Compiler
-
-The React Compiler is not enabled on this template because of its impact on dev & build performances. To add it, see [this documentation](https://react.dev/learn/react-compiler/installation).
-
-## Expanding the ESLint configuration
-
-If you are developing a production application, we recommend updating the configuration to enable type-aware lint rules:
-
-```js
-export default defineConfig([
-  globalIgnores(['dist']),
-  {
-    files: ['**/*.{ts,tsx}'],
-    extends: [
-      // Other configs...
-
-      // Remove tseslint.configs.recommended and replace with this
-      tseslint.configs.recommendedTypeChecked,
-      // Alternatively, use this for stricter rules
-      tseslint.configs.strictTypeChecked,
-      // Optionally, add this for stylistic rules
-      tseslint.configs.stylisticTypeChecked,
-
-      // Other configs...
-    ],
-    languageOptions: {
-      parserOptions: {
-        project: ['./tsconfig.node.json', './tsconfig.app.json'],
-        tsconfigRootDir: import.meta.dirname,
-      },
-      // other options...
-    },
-  },
-])
+## Local Run
+```bash
+npm install
+npm run dev
 ```
 
-You can also install [eslint-plugin-react-x](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-x) and [eslint-plugin-react-dom](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-dom) for React-specific lint rules:
-
-```js
-// eslint.config.js
-import reactX from 'eslint-plugin-react-x'
-import reactDom from 'eslint-plugin-react-dom'
-
-export default defineConfig([
-  globalIgnores(['dist']),
-  {
-    files: ['**/*.{ts,tsx}'],
-    extends: [
-      // Other configs...
-      // Enable lint rules for React
-      reactX.configs['recommended-typescript'],
-      // Enable lint rules for React DOM
-      reactDom.configs.recommended,
-    ],
-    languageOptions: {
-      parserOptions: {
-        project: ['./tsconfig.node.json', './tsconfig.app.json'],
-        tsconfigRootDir: import.meta.dirname,
-      },
-      // other options...
-    },
-  },
-])
+## Environment
+Create `.env` from `.env.example`:
+```bash
+VITE_SUPABASE_URL=your_supabase_project_url
+VITE_SUPABASE_ANON_KEY=your_supabase_anon_key
 ```
+
+## Supabase Setup
+1. Open Supabase SQL editor.
+2. Run `supabase/schema.sql`.
+3. In Supabase Auth settings:
+   - enable Email OTP sign-in
+   - enable email/password sign-up
+
+## Auth Flows Implemented
+- Register: 4-step onboarding -> email OTP verification
+- Login: email/password or email OTP
+- Forgot password: OTP-based recovery path
+- Reset password: secure update after OTP session
+- Transaction PIN: secure hash storage via Postgres RPC `set_transaction_pin`
+
+## Pages
+- `/` Home
+- `/login`
+- `/register`
+- `/verify-otp`
+- `/forgot-password`
+- `/reset-password`
+- `/dashboard`
+
+## Build
+```bash
+npm run build
+```
+
+## Deploy (Vercel)
+```bash
+vercel --prod
+```
+
+Set `VITE_SUPABASE_URL` and `VITE_SUPABASE_ANON_KEY` in Vercel Project Settings -> Environment Variables.

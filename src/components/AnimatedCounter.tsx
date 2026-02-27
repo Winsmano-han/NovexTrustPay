@@ -5,9 +5,10 @@ type Props = {
   to: number
   suffix?: string
   prefix?: string
+  decimals?: number
 }
 
-export function AnimatedCounter({ to, suffix = '', prefix = '' }: Props) {
+export function AnimatedCounter({ to, suffix = '', prefix = '', decimals = 0 }: Props) {
   const ref = useRef<HTMLSpanElement | null>(null)
   const inView = useInView(ref, { once: true, margin: '-20px' })
   const [value, setValue] = useState(0)
@@ -21,7 +22,8 @@ export function AnimatedCounter({ to, suffix = '', prefix = '' }: Props) {
 
     const id = setInterval(() => {
       current += 1
-      const next = Math.round((current / steps) * to)
+      const raw = (current / steps) * to
+      const next = Number(raw.toFixed(decimals))
       setValue(next)
       if (current >= steps) clearInterval(id)
     }, frame)
@@ -29,5 +31,5 @@ export function AnimatedCounter({ to, suffix = '', prefix = '' }: Props) {
     return () => clearInterval(id)
   }, [inView, to])
 
-  return <span ref={ref}>{prefix}{value.toLocaleString()}{suffix}</span>
+  return <span ref={ref}>{prefix}{value.toLocaleString(undefined, { minimumFractionDigits: decimals, maximumFractionDigits: decimals })}{suffix}</span>
 }
