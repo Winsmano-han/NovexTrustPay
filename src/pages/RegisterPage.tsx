@@ -22,16 +22,15 @@ const schema = z
     state: z.string().min(2),
     postalCode: z.string().min(3),
     accountType: z.enum(['Personal', 'Business', 'Investment']),
-    password: z.string().min(8),
+    password: z.string().min(8, 'Password must be at least 8 characters'),
+    confirmPassword: z.string().min(8, 'Confirm your password'),
     securityQuestion1: z.string().min(3),
     securityQuestion2: z.string().min(3),
-    transactionPin: z.string().regex(/^[0-9]{4,6}$/, 'PIN must be 4-6 digits'),
-    confirmPin: z.string(),
     termsAccepted: z.boolean().refine((v) => v, { message: 'You must accept terms' }),
   })
-  .refine((data) => data.transactionPin === data.confirmPin, {
-    message: 'PIN values do not match',
-    path: ['confirmPin'],
+  .refine((data) => data.password === data.confirmPassword, {
+    message: 'Passwords do not match',
+    path: ['confirmPassword'],
   })
 
 type FormData = z.infer<typeof schema>
@@ -39,7 +38,7 @@ type FormData = z.infer<typeof schema>
 const steps: { title: string; fields: (keyof FormData)[] }[] = [
   { title: 'Personal Information', fields: ['firstName', 'middleName', 'lastName', 'dateOfBirth', 'username'] },
   { title: 'Contact Information', fields: ['email', 'phone', 'country', 'address', 'city', 'state', 'postalCode'] },
-  { title: 'Account Setup', fields: ['accountType', 'password', 'securityQuestion1', 'securityQuestion2', 'transactionPin', 'confirmPin', 'termsAccepted'] },
+  { title: 'Account Setup', fields: ['accountType', 'password', 'confirmPassword', 'securityQuestion1', 'securityQuestion2', 'termsAccepted'] },
   { title: 'Verification', fields: [] },
 ]
 
@@ -120,12 +119,7 @@ export function RegisterPage() {
       return
     }
 
-    const pending = {
-      email: values.email,
-      pin: values.transactionPin,
-    }
-    sessionStorage.setItem('pending_registration', JSON.stringify(pending))
-
+    sessionStorage.setItem('pending_registration', JSON.stringify({ email: values.email }))
     navigate(`/verify-otp?email=${encodeURIComponent(values.email)}&purpose=signup`)
   }
 
@@ -133,7 +127,7 @@ export function RegisterPage() {
     <>
       <SiteHeader />
       <main className="section container auth-wrap">
-        <form className="auth-card wide" onSubmit={handleSubmit(onSubmit)}>
+        <form className="auth-card wide register-modern" onSubmit={handleSubmit(onSubmit)}>
           <h1>Account Opening - 4 Step Enrollment</h1>
           <div className="progress-track"><span style={{ width: `${progress}%` }} /></div>
           <p>Step {step + 1} of {steps.length}: {steps[step].title}</p>
@@ -170,10 +164,9 @@ export function RegisterPage() {
                 </select>
               </label>
               <label>Password<input type="password" {...register('password')} /></label>
+              <label>Confirm Password<input type="password" {...register('confirmPassword')} /></label>
               <label>Security Question 1<input {...register('securityQuestion1')} placeholder="What was your first school?" /></label>
               <label>Security Question 2<input {...register('securityQuestion2')} placeholder="What is your favorite city?" /></label>
-              <label>Transaction PIN (4-6 digits)<input type="password" inputMode="numeric" {...register('transactionPin')} /></label>
-              <label>Confirm Transaction PIN<input type="password" inputMode="numeric" {...register('confirmPin')} /></label>
               <label className="checkbox-row"><input type="checkbox" {...register('termsAccepted')} /> I accept Terms and Conditions</label>
             </div>
           )}
@@ -185,7 +178,7 @@ export function RegisterPage() {
                 After submission, enter the OTP on the verification screen to activate your account.
               </p>
               <p>
-                This verification confirms ownership of the email and enables secure account access and password recovery.
+                After successful verification, you will be asked to create your transaction PIN in a secure step.
               </p>
             </div>
           )}

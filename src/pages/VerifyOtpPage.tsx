@@ -42,14 +42,9 @@ export function VerifyOtpPage() {
     }
 
     if (purpose === 'signup') {
-      const pending = sessionStorage.getItem('pending_registration')
-      if (pending) {
-        const data = JSON.parse(pending) as { pin?: string }
-        if (data.pin) {
-          await supabase.rpc('set_transaction_pin', { pin: data.pin })
-        }
-        sessionStorage.removeItem('pending_registration')
-      }
+      sessionStorage.removeItem('pending_registration')
+      navigate('/set-pin')
+      return
     }
 
     navigate('/dashboard')
